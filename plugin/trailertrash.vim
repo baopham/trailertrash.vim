@@ -40,6 +40,11 @@ endfunction
 command! -bar -range=% Trim :call KillTrailerTrash()
 "nmap <silent> <Leader><space> :call KillTrailerTrash()<CR>
 
+" User can override blacklist. This match as regexp pattern.
+let s:blacklist = get(g:, 'trailertrash_blacklist', [
+\ '__Calendar',
+\])
+
 function! HideTrailer()
     match none UnwantedTrailerTrash
     let g:hide_trailer = 1
@@ -48,8 +53,15 @@ endfunction
 command! HideTrailer :call HideTrailer()
 
 function! ShowTrailer()
-    let g:hide_trailer = 0
-    match UnwantedTrailerTrash /\s\+$/
+    if (&modifiable)
+        for ignore in s:blacklist
+            if bufname =~ ignore
+                return
+            endif
+        endfor
+        let g:hide_trailer = 0
+        match UnwantedTrailerTrash /\s\+$/
+    endif
 endfunction
 
 command! ShowTrailer :call ShowTrailer()
