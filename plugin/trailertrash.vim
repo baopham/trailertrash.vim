@@ -54,6 +54,7 @@ command! HideTrailer :call HideTrailer()
 
 function! ShowTrailer()
     if (&modifiable)
+        let bufname = bufname('%')
         for ignore in s:blacklist
             if bufname =~ ignore
                 return
