@@ -21,7 +21,7 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 function! s:init()
-    if (&modifiable)
+    if (&modifiable && !get(g:, 'trailertrash_hide_on_open', 0))
         let b:show_trailer = 1
     else
         let b:show_trailer = 0
