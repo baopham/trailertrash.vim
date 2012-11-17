@@ -6,6 +6,8 @@
 " http://vimcasts.org/episodes/tidying-whitespace/
 " http://blog.kamil.dworakowski.name/2009/09/unobtrusive-highlighting-of-trailing.html
 " and more!
+" 
+" Forked by: Bao Pham
 
 " Exit quickly when:
 " - this plugin was already loaded (or disabled)
@@ -18,12 +20,15 @@ let g:loaded_trailertrash = 1
 let s:cpo_save = &cpo
 set cpo&vim
 
-" Code {{{1
-if &modifiable
-    let g:hide_trailer = 0
-else
-    let g:hide_trailer = 1
-endif
+function! s:init()
+    if (&modifiable)
+        let b:show_trailer = 1
+    else
+        let b:show_trailer = 0
+    endif
+endfunction
+
+call s:init()
 
 function! KillTrailerTrash()
     " Preparation: save last search, and cursor position.
@@ -38,7 +43,6 @@ function! KillTrailerTrash()
 endfunction
 
 command! -bar -range=% Trim :call KillTrailerTrash()
-"nmap <silent> <Leader><space> :call KillTrailerTrash()<CR>
 
 " User can override blacklist. This match as regexp pattern.
 let s:blacklist = get(g:, 'trailertrash_blacklist', [
@@ -47,7 +51,7 @@ let s:blacklist = get(g:, 'trailertrash_blacklist', [
 
 function! HideTrailer()
     match none UnwantedTrailerTrash
-    let g:hide_trailer = 1
+    let b:show_trailer = 0
 endfunction
 
 command! HideTrailer :call HideTrailer()
@@ -60,23 +64,29 @@ function! ShowTrailer()
                 return
             endif
         endfor
-        let g:hide_trailer = 0
+        let b:show_trailer = 1
         match UnwantedTrailerTrash /\s\+$/
     endif
 endfunction
 
 command! ShowTrailer :call ShowTrailer()
 
+function! s:isHighlighting()
+    if !(exists('b:show_trailer'))
+        call s:init()
+    endif
+    return b:show_trailer
+endfunction
+
 hi link UnwantedTrailerTrash ErrorMsg
 au ColorScheme * hi link UnwantedTrailerTrash ErrorMsg
-au BufEnter    * if g:hide_trailer == 0 | match UnwantedTrailerTrash /\s\+$/ | endif
-au InsertEnter * if g:hide_trailer == 0 | match UnwantedTrailerTrash /\s\+\%#\@<!$/ | endif
-au InsertLeave * if g:hide_trailer == 0 | match UnwantedTrailerTrash /\s\+$/ | endif
+au BufEnter    * if s:isHighlighting() | match UnwantedTrailerTrash /\s\+$/ | endif
+au InsertEnter * if s:isHighlighting() | match UnwantedTrailerTrash /\s\+\%#\@<!$/ | endif
+au InsertLeave * if s:isHighlighting() | match UnwantedTrailerTrash /\s\+$/ | endif
 
 " }}}1
 
 let &cpo = s:cpo_save
 
 " vim:set ft=vim ts=8 sw=4 sts=4:
-
 
