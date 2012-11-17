@@ -71,6 +71,16 @@ endfunction
 
 command! ShowTrailer :call ShowTrailer()
 
+function! Trailer()
+    if (s:isHighlighting())
+        call HideTrailer()
+    else
+        call ShowTrailer()
+    endif
+endfunction
+
+command! Trailer :call Trailer()
+
 function! s:isHighlighting()
     if !(exists('b:show_trailer'))
         call s:init()
