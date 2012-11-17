@@ -12,15 +12,19 @@ This plugin will highlight trailing whitespace at the end of the line. This is d
  * Places the cursor back where is started
  * Resets the search highlight back to what it was
 
- To toggle highlight, call `:HideTrailer` or `:ShowTrailer`
-
 As always, Trailer Trash is polite.
 
-### Ignoring Specific file types
+### Customization
 
-You can ignore specific file types by adding an exluude list to your `.vimrc` file. If you have any specific types that should always be ignoreed plese send a pull request or open an issue.
+ * To toggle highlight, call `:Trailer` or `:HideTrailer` and `:ShowTrailer`
 
-    let g:trailertrash_blacklist = ['__Calendar', '^http:']
+ * To not show highlight at start, put this in your vimrc file: `let g:trailertrash_hide_on_open = 1`. The default is 0
+
+ * Ignoring Specific file types:
+
+ You can ignore specific file types by adding an exluude list to your `.vimrc` file. If you have any specific types that should always be ignoreed plese send a pull request or open an issue.
+
+        let g:trailertrash_blacklist = ['__Calendar', '^http:']
 
 ----
 
