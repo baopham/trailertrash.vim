@@ -6,7 +6,7 @@
 " http://vimcasts.org/episodes/tidying-whitespace/
 " http://blog.kamil.dworakowski.name/2009/09/unobtrusive-highlighting-of-trailing.html
 " and more!
-" 
+"
 " Forked by: Bao Pham
 
 " Exit quickly when:
@@ -87,6 +87,12 @@ function! s:isHighlighting()
     endif
     return b:show_trailer
 endfunction
+
+function! FindTrailer()
+    /\s\+$/
+endfunction
+
+command! FindTrailer :call FindTrailer()
 
 hi link UnwantedTrailerTrash ErrorMsg
 au ColorScheme * hi link UnwantedTrailerTrash ErrorMsg
